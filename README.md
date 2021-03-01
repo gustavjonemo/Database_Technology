@@ -2,7 +2,7 @@
 
 This is the report for
 
- + Firstname Lastname, `stil_id`
+ + Robin Vinterbladh, `ro3413vi-s`
  + ...
 
 We solved this project on our own, except for:
