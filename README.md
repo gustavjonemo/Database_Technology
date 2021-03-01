@@ -20,9 +20,6 @@ The model is in the file [`er-model.png`](er-model.png):
     <img src="er-model.png" width="100%">
 </center>
 
-(The image above describes the model from lecture 4, you
-must replace the file '`er-model.png`' with an image of your
-own ER-model).
 
 
 ## Relations
@@ -44,10 +41,6 @@ are both primary keys and foreign keys):
 + customers(**customer_name**, address)
 + orders(**order_id**, customer_name, nbr_pallets, cookie_name, order_status)
 + deliveries(delivety_id, order_id, date, time)
-
-(this should be replaced with your own relations, of course,
-but use the same way of marking primary keys and foreign
-keys).
 
 
 ## Scripts to set up database
