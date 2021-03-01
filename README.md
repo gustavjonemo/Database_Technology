@@ -3,12 +3,13 @@
 This is the report for
 
  + Robin Vinterbladh, `ro3413vi-s`
- + ...
+ + Gustav Jönemo, `gu1673jo-s `
+ + Rebecka Källén, `elt14lka`
 
 We solved this project on our own, except for:
 
  + The Peer-review meeting
- + ... describe any other help you've gotten ...
+ + 
 
 
 ## ER-design
@@ -35,11 +36,14 @@ so we use bold face for primary keys, italicized face for
 foreign keys, and bold italicized face for attributes which
 are both primary keys and foreign keys):
 
-+ authors(**author_name**, nationality)
-+ books(**isbn**, book_title, published_year, publisher)
-+ authored_books(**_author_name_**, **_isbn_**)
-+ copies(**copy_barcode**, _isbn_, _library_name_, shelf)
-+ ...
++ material_delivery(**storage_id**, date, time, ingredient, amount)
++ material_storage(**ingredient**, grams, storage_id)
++ recipies(cookie_name, ingredient, grams)
++ amounts(**cookie_name**, nbr_bags, nbr_boxes)
++ pallets(**pallet_id**, cookie_name, date, time, delivery_status, blocked, order_id)
++ customers(**customer_name**, address)
++ orders(**order_id**, customer_name, nbr_pallets, cookie_name, order_status)
++ deliveries(delivety_id, order_id, date, time)
 
 (this should be replaced with your own relations, of course,
 but use the same way of marking primary keys and foreign
