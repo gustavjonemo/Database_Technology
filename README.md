@@ -4,7 +4,7 @@ This is the report for
 
  + Robin Vinterbladh, `ro3413vi-s`
  + Gustav Jönemo, `gu1673jo-s `
- + Rebecka Källén, `elt14lka`
+ + Rebecka Källén, `elt14rka`
 
 We solved this project on our own, except for:
 
