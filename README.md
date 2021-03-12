@@ -35,10 +35,11 @@ are both primary keys and foreign keys):
 
 + material_storage(**ingredient**, current_amount, date, time, last_deposit)
 + cookie_ingredients(cookie_name, ingredient, amount)
-+ packaging(**cookie_name**, nbr_bags, nbr_boxes)
++ cookie(**cookie_name**)
 + pallets(**pallet_id**, cookie_name, date, time, delivery_status, blocked, order_id)
++ order_details(**cookie_name**, nbr_pallets, order_id)
++ orders(**order_id**, customer_name, order_status)
 + customers(**customer_name**, address)
-+ orders(**order_id**, customer_name, nbr_pallets, cookie_name, order_status)
 + deliveries(delivety_id, order_id, date, time)
 
 
