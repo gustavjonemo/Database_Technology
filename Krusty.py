@@ -94,7 +94,7 @@ def post_ingredients(ingredients):
                 last_deposit = ?
             WHERE ingredient LIKE ?
             """,
-            [ingredient['deliveryTime'], ingredient['quantity'].replace("_", ""), ingredient['quantity'].replace("_", ""), ingredients]
+            [ingredient['deliveryTime'], ingredient['quantity'], ingredient['quantity'], ingredients]  # byt datetime till text i db
         )
         response.status = 201
         db.commit()
