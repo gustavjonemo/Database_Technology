@@ -88,13 +88,13 @@ def post_ingredients(ingredients):
     try:
         c.execute(
             """
-            UPADTE Material_storage
+            UPDATE Material_storage
             SET delivery_time = ?,
-                current_amount = current_amount + ?,
+                current_amount =current_amount + ?,
                 last_deposit = ?
             WHERE ingredient LIKE ?
             """,
-            [ingredient['deliveryTime'], ingredient['quantity'], ingredient['quantity'], ingredients]  # byt datetime till text i db
+            [ingredient['deliveryTime'], ingredient['quantity'], ingredient['quantity'], ingredients]
         )
         response.status = 201
         db.commit()
@@ -107,7 +107,6 @@ def post_ingredients(ingredients):
 
 @get('/ingredients')
 def get_ingredients():
-    ingredient = request.json
     c = db.cursor()
     try:
         c.execute(
@@ -128,15 +127,15 @@ def get_ingredients():
 @post('/cookies')
 def post_cookies():
     cookie = request.json
-    recipe = [cookie["name"] + {ingredient, amount} for cookie["ingredient"], cookie["amount"] in cookie["recipe"]]
+    recipe = [(cookie["name"], x["ingredient"], x["amount"]) for x in cookie["recipe"]]
+    print(recipe)
     c = db.cursor()
-    #found = [{"ingredient": ingredient, "quantity": current_amount, "unit": unit} for ingredient, current_amount, unit in c]
     try:
         c.execute(
             """
             INSERT
             INTO Cookies(cookie_name)
-            VALUES ?
+            VALUES (?)
             """,
             [cookie['name']]
         )
@@ -145,14 +144,13 @@ def post_cookies():
             """
             INSERT
             INTO Cookie_ingredients(cookie_name, ingredient, amount)
-            VALUES (?,?,?)
+            VALUES (?,?,?);
             """,
             recipe
-            #[cookie["name"], for cookie["ingredient"], cookie["amount"] in cookie["recipe"]]
-        );
+        )
         response.status = 201
         db.commit()
-        return {"location": "/cookies/" + cookie['name']}
+        return {"location": "/cookies/" + quote(cookie['name'])}
     except:
         response.status = 400
         return {""}
