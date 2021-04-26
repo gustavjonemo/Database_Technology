@@ -90,11 +90,11 @@ def post_ingredients(ingredients):
             """
             UPDATE Material_storage
             SET delivery_time = ?,
-                current_amount = current_amount + ?,
+                current_amount =current_amount + ?,
                 last_deposit = ?
             WHERE ingredient LIKE ?
             """,
-            [ingredient['deliveryTime'], ingredient['quantity'], ingredient['quantity'], ingredients]  # byt datetime till text i db
+            [ingredient['deliveryTime'], ingredient['quantity'], ingredient['quantity'], ingredients]
         )
         response.status = 201
         db.commit()
@@ -107,7 +107,6 @@ def post_ingredients(ingredients):
 
 @get('/ingredients')
 def get_ingredients():
-    ingredient = request.json
     c = db.cursor()
     try:
         c.execute(
@@ -148,8 +147,7 @@ def post_cookies():
             VALUES (?,?,?);
             """,
             recipe
-            #[cookie["name"], for cookie["ingredient"], cookie["amount"] in cookie["recipe"]]
-        );
+        )
         response.status = 201
         db.commit()
         return {"location": "/cookies/" + quote(cookie['name'])}

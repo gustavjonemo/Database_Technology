@@ -14,7 +14,7 @@ import re
 import requests
 import sys
 import textwrap
-from sys import exit
+#from sys import exit
 
 
 HOST="localhost"
@@ -178,20 +178,21 @@ def check_all():
         # don't bother with the location for reset...
         ok()
 
-        testing("add/get customers")
-        resource = url("/customers")
-        for c_name, c_addr in CUSTOMER_INPUT:
-            payload = {"name": c_name, "address": c_addr}
-            r = requests.post(resource, json=payload)
-            require(r.status_code, 201, "Wrong status code from POST /customers")
-            location = r.json()['location']
-            cid = removeprefix(location, "/customers/")
-            require(cid, quote(c_name), "Wrong id from POST /customers/")
+#        testing("add/get customers")
+#        resource = url("/customers")
+#        for c_name, c_addr in CUSTOMER_INPUT:
+#            payload = {"name": c_name, "address": c_addr}
+#            r = requests.post(resource, json=payload)
+#            require(r.status_code, 201, "Wrong status code from POST /customers")
+#            location = r.json()['location']
+#            cid = removeprefix(location, "/customers/")
+#            require(cid, quote(c_name), "Wrong id from POST /customers/")
             # new_resource = url(location)
             # r = requests.get(new_resource)
             # customer = r.json()['data']
             # require(customer['name'], unquote(cid))
             # require(customer['address'], c_addr)
+<<<<<<< HEAD
         ok()
 
         testing("add/get ingredients")
@@ -211,6 +212,26 @@ def check_all():
             r = requests.post(url(f"/ingredients/{quote(ingredient_name)}/deliveries"), json=payload)
             require(r.status_code, 201, "Wrong status code from POST on /ingredients/.../deliveries")
         ok()
+=======
+#        ok()
+
+#        testing("add/get ingredients")
+#        for ingredient_name, unit in INGREDIENT_INPUT:
+#            payload = {"ingredient": ingredient_name, "unit": unit}
+#            resource = url("/ingredients")
+#            r = requests.post(resource, json=payload)
+#            require(r.status_code, 201, "Wrong status code from POST on /ingredients")
+#            location = r.json()['location']
+#            ingredient_id = removeprefix(location, "/ingredients/")
+#            new_resource = url(location)
+#        ok()
+#        testing("add/get ingredients/.../deliveries")
+#        for ingredient_name, quantity in INGREDIENT_DELIVERY_INPUT:
+#            payload = {"quantity": quantity, "deliveryTime": "2021-03-19 10:30:00"}
+#            r = requests.post(url(f"/ingredients/{quote(ingredient_name)}/deliveries"), json=payload)
+#            require(r.status_code, 201, "Wrong status code from POST on /ingredients/.../deliveries")
+#        ok()
+>>>>>>> d2980baf489b2948576846d6328bcd798268f1c1
 
         testing("add/get cookies")
         resource = url("/cookies")
