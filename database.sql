@@ -25,7 +25,7 @@ CREATE TABLE Cookies(
 DROP TABLE IF EXISTS Pallets;
 
 CREATE TABLE Pallets(
-	pallet_id CHAR(4) PRIMARY KEY,
+	pallet_id TEXT PRIMARY KEY DEFAULT (lower(hex(randomblob(16)))),
 	cookie_name TEXT,
     pallet_time DATETIME,
 	delivery_status INT,  -- 1 - Delivered, 0 - Not delivered
@@ -63,3 +63,30 @@ CREATE TABLE Orders(
 	customer_name	TEXT,
 	order_status	INT -- 1 - Delivered, 0 - Not delivered
 );
+
+
+CREATE TRIGGER available_ingredients
+    BEFORE INSERT ON Pallets
+BEGIN
+    SELECT CASE 
+    WHEN (( SELECT cookie_name, ingredient, amount
+            FROM Material_storage
+            JOIN Cookie_ingredients
+            USING (ingredient)
+            WHERE cookie_name IS NEW.cookie_name AND amount*54 >= current_amount
+    ) ISNULL)
+    THEN RAISE (ABORT, "ERROR")
+    END;
+END; 
+
+CREATE TRIGGER decrease_ingredient
+    AFTER INSERT ON Pallets
+BEGIN
+    UPDATE Material_storage
+    SET current_amount = current_amount - ( SELECT amount*54 
+                                            FROM Cookie_ingredients
+                                            WHERE cookie_name IS NEW.cookie_name AND ingredient IS Material_storage.ingredient 
+                                            );
+END;
+
+    

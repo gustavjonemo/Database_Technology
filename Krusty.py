@@ -88,7 +88,7 @@ def post_ingredients(ingredients):
     try:
         c.execute(
             """
-            UPADTE Material_storage
+            UPDATE Material_storage
             SET delivery_time = ?,
                 current_amount = current_amount + ?,
                 last_deposit = ?
@@ -128,15 +128,15 @@ def get_ingredients():
 @post('/cookies')
 def post_cookies():
     cookie = request.json
-    recipe = [cookie["name"] + {ingredient, amount} for cookie["ingredient"], cookie["amount"] in cookie["recipe"]]
+    recipe = [(cookie["name"], x["ingredient"], x["amount"]) for x in cookie["recipe"]]
+    print(recipe)
     c = db.cursor()
-    #found = [{"ingredient": ingredient, "quantity": current_amount, "unit": unit} for ingredient, current_amount, unit in c]
     try:
         c.execute(
             """
             INSERT
             INTO Cookies(cookie_name)
-            VALUES ?
+            VALUES (?)
             """,
             [cookie['name']]
         )
@@ -145,17 +145,92 @@ def post_cookies():
             """
             INSERT
             INTO Cookie_ingredients(cookie_name, ingredient, amount)
-            VALUES (?,?,?)
+            VALUES (?,?,?);
             """,
             recipe
             #[cookie["name"], for cookie["ingredient"], cookie["amount"] in cookie["recipe"]]
         );
         response.status = 201
         db.commit()
-        return {"location": "/cookies/" + cookie['name']}
+        return {"location": "/cookies/" + quote(cookie['name'])}
     except:
         response.status = 400
         return {""}
+
+
+@get('/cookies')
+def get_cookies():
+    cookies = request.json
+    c = db.cursor()
+    try:
+        c.execute(
+            """
+            SELECT cookie_name
+            FROM Cookies
+            """
+        )
+        response.status = 200
+        db.commit()
+        found = [{"name": cookie_name[0]} for cookie_name in c]
+        return {"data": found}
+    except:
+        response.status = 400
+        return {""}
+
+
+@get('/cookies/<cookie_name>/recipe')
+def get_cookies(cookie_name):
+    c = db.cursor()
+    try:
+        c.execute(
+            """
+            SELECT  ingredient, amount, unit
+            FROM    Cookie_ingredients
+            JOIN    Material_storage
+            USING   (ingredient)
+            WHERE   cookie_name = ?
+            """,
+            [cookie_name]
+        )
+        found = [{"ingredient": ingredient, "amount": amount, "unit": unit} for ingredient, amount, unit in c]
+        if found:
+            response.status = 200
+        else:
+            response.status = 404
+        return {"data": found}
+    except:
+        response.status = 404 
+        return {"data": []}
+
+
+@post('/pallets')
+def post_pallets():
+    pallet = request.json
+    c = db.cursor()
+    try:
+        c.execute(
+            """
+            INSERT
+            INTO Pallets(cookie_name, pallet_time, delivery_status, blocked)
+            VALUES (?, DATETIME("NOW"), 0, 0)
+            """,
+            [pallet['cookie']]
+        )
+        response.status = 201
+        db.commit()
+        c.execute(
+            """
+            UPDATE Material_storage
+            SET current_amount = current_amount - 
+            """
+        )
+        print(c)
+        print(pallet["location"])
+        return {"location": "/pallets/" + pallet["location"]}
+    except:
+        response.status = 422
+        print("hej")
+        return {"location": ""}
 
 
 run(host='localhost', port=8888)
