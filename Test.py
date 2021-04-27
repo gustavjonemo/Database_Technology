@@ -192,8 +192,8 @@ def check_all():
             # customer = r.json()['data']
             # require(customer['name'], unquote(cid))
             # require(customer['address'], c_addr)
-<<<<<<< HEAD
-        ok()
+            #<<<<<<< HEAD
+            #ok()
 
         testing("add/get ingredients")
         for ingredient_name, unit in INGREDIENT_INPUT:
@@ -212,7 +212,7 @@ def check_all():
             r = requests.post(url(f"/ingredients/{quote(ingredient_name)}/deliveries"), json=payload)
             require(r.status_code, 201, "Wrong status code from POST on /ingredients/.../deliveries")
         ok()
-=======
+#=======
 #        ok()
 
 #        testing("add/get ingredients")
@@ -231,7 +231,7 @@ def check_all():
 #            r = requests.post(url(f"/ingredients/{quote(ingredient_name)}/deliveries"), json=payload)
 #            require(r.status_code, 201, "Wrong status code from POST on /ingredients/.../deliveries")
 #        ok()
->>>>>>> d2980baf489b2948576846d6328bcd798268f1c1
+#>>>>>>> d2980baf489b2948576846d6328bcd798268f1c1
 
         testing("add/get cookies")
         resource = url("/cookies")

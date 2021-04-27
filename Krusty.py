@@ -216,15 +216,7 @@ def post_pallets():
         )
         response.status = 201
         db.commit()
-        c.execute(
-            """
-            UPDATE Material_storage
-            SET current_amount = current_amount - 
-            """
-        )
-        print(c)
-        print(pallet["location"])
-        return {"location": "/pallets/" + pallet["location"]}
+        return {"location": "/pallets/"} # location how???????????
     except:
         response.status = 422
         print("hej")

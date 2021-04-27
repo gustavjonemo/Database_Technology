@@ -64,29 +64,38 @@ CREATE TABLE Orders(
 	order_status	INT -- 1 - Delivered, 0 - Not delivered
 );
 
+DROP TRIGGER IF EXISTS available_ingredients;
 
 CREATE TRIGGER available_ingredients
     BEFORE INSERT ON Pallets
 BEGIN
     SELECT CASE 
-    WHEN (( SELECT cookie_name, ingredient, amount
+    WHEN EXISTS( SELECT cookie_name
             FROM Material_storage
             JOIN Cookie_ingredients
             USING (ingredient)
             WHERE cookie_name IS NEW.cookie_name AND amount*54 >= current_amount
-    ) ISNULL)
-    THEN RAISE (ABORT, "ERROR")
+    )
+    THEN RAISE (ROLLBACK, "ERROR")
     END;
 END; 
+
+DROP TRIGGER IF EXISTS decrease_ingredient;
 
 CREATE TRIGGER decrease_ingredient
     AFTER INSERT ON Pallets
 BEGIN
     UPDATE Material_storage
-    SET current_amount = current_amount - ( SELECT amount*54 
+    SET current_amount = current_amount -  (SELECT amount 
                                             FROM Cookie_ingredients
                                             WHERE cookie_name IS NEW.cookie_name AND ingredient IS Material_storage.ingredient 
-                                            );
+                                            )*54
+    WHERE ingredient IN    (SELECT ingredient 
+                            FROM Cookie_ingredients
+                            WHERE NEW.cookie_name IS cookie_name
+                            )
+    ;
 END;
+
 
     
