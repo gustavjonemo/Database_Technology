@@ -128,7 +128,6 @@ def get_ingredients():
 def post_cookies():
     cookie = request.json
     recipe = [(cookie["name"], x["ingredient"], x["amount"]) for x in cookie["recipe"]]
-    print(recipe)
     c = db.cursor()
     try:
         c.execute(
@@ -158,7 +157,6 @@ def post_cookies():
 
 @get('/cookies')
 def get_cookies():
-    cookies = request.json
     c = db.cursor()
     try:
         c.execute(
@@ -214,12 +212,19 @@ def post_pallets():
             """,
             [pallet['cookie']]
         )
-        response.status = 201
         db.commit()
-        return {"location": "/pallets/"} # location how???????????
+        c.execute(
+            """
+            SELECT pallet_id
+            FROM Pallets
+            WHERE rowid = last_insert_rowid()
+            """
+        )
+        response.status = 201
+        id = c.fetchone()[0]
+        return {"location": "/pallets/" + id}
     except:
         response.status = 422
-        print("hej")
         return {"location": ""}
 
 
