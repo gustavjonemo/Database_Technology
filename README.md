@@ -54,3 +54,20 @@ So, to create the database, we run:
 ```shell
 sqlite3 database.sqlite < database.sql
 ```
+
+## Scripts to run the database and tests
+
+The scripts used to run the database and test are:
+```shell
+python Krusty.py  # starts database
+
+python Test.py  # starts the tests
+```
+
+The tests don't pass since we implemented blocking of pallets and get_cookies has number of pallets in its body.
+
+For testing with curl you use localhost and port 8888,
+example for unblocking pallets of "Tango" cookies that were made after the 27/4-2021 :  
+```shell
+curl -X POST http://localhost:8888/cookies/Tango/unblock\?after=2021-04-27 
+```
