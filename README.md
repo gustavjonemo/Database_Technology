@@ -33,14 +33,14 @@ so we use bold face for primary keys, italicized face for
 foreign keys, and bold italicized face for attributes which
 are both primary keys and foreign keys):
 
-+ Material_storage(**ingredient**, current_amount, date, time, last_deposit)
++ Material_storage(**ingredient**, current_amount, delivery_time, last_deposit, unit)
 + Cookie_ingredients(cookie_name, ingredient, amount)
-+ Cookie(**cookie_name**)
-+ Pallets(**pallet_id**, cookie_name, date, time, delivery_status, blocked, order_id)
++ Cookies(**cookie_name**)
++ Pallets(**pallet_id**, cookie_name, pallet_time, delivery_status, blocked, order_id)
 + Order_details(cookie_name, nbr_pallets, order_id)
 + Orders(**order_id**, customer_name, order_status)
 + Customers(**customer_name**, address)
-+ Deliveries(delivety_id, order_id, date, time)
++ Deliveries(delivety_id, order_id, delivery_time)
 
 
 ## Scripts to set up database
