@@ -161,13 +161,18 @@ def get_cookies():
     try:
         c.execute(
             """
-            SELECT cookie_name
+            SELECT cookie_name, count(blocked) as unblocked_pallets
             FROM Cookies
+            JOIN Pallets
+            USING (cookie_name)
+            WHERE blocked IS 0
+            GROUP BY cookie_name
             """
         )
         response.status = 200
         db.commit()
-        found = [{"name": cookie_name[0]} for cookie_name in c]
+        found = [{"name": cookie_name, "pallets": unblocked_pallets} for cookie_name, unblocked_pallets in c]
+        print(found)
         return {"data": found}
     except:
         response.status = 400
@@ -199,6 +204,56 @@ def get_cookies(cookie_name):
         return {"data": []}
 
 
+@post('/cookies/<cookie_name>/block')
+def get_cookies(cookie_name):
+
+    try:
+        query = """
+        UPDATE Pallets
+        SET blocked = 1
+        WHERE cookie_name IS ?
+        """
+        params = [cookie_name]
+        if request.query.after:
+            query += "AND date(pallet_time) > ?"
+            params.append(request.query.after)
+        if request.query.before:
+            query += "AND date(pallet_time) < ?"
+            params.append(request.query.before)
+        c = db.cursor()
+        c.execute(query, params)
+        db.commit()
+        response.status = 205
+        return {""}
+    except:
+        response.status = 404
+        return {"could not block pallets"}\
+
+@post('/cookies/<cookie_name>/unblock')
+def get_cookies(cookie_name):
+    c = db.cursor()
+    try:
+        query = """
+        UPDATE Pallets
+        SET blocked = 0
+        WHERE cookie_name IS ?
+        """
+        params = [cookie_name]
+        if request.query.after:
+            query += "AND date(pallet_time) > ?"
+            params.append(request.query.after)
+        if request.query.before:
+            query += "AND date(pallet_time) < ?"
+            params.append(request.query.before)
+        c.execute(query, params)
+        db.commit()
+        response.status = 205
+        return {""}
+    except:
+        response.status = 404
+        return {"could not block pallets"}
+
+
 @post('/pallets')
 def post_pallets():
     pallet = request.json
@@ -226,6 +281,42 @@ def post_pallets():
     except:
         response.status = 422
         return {"location": ""}
+
+
+@get('/pallets')
+def get_pallets():
+    try:
+        query = """
+        SELECT  pallet_id, cookie_name, pallet_time, blocked
+        FROM    Pallets
+        WHERE 1 = 1
+        """
+        params = []
+        if request.query.cookie:
+            query += "AND cookie_name = ?"
+            params.append(request.query.cookie)
+        if request.query.after:
+            query += "AND date(pallet_time) > ?"
+            params.append(request.query.after)
+        if request.query.before:
+            query += "AND date(pallet_time) < ?"
+            params.append(request.query.before)
+        c = db.cursor()
+        if(params):
+            c.execute(query, params)
+        else:
+            c.execute(query)
+
+
+        found = [{"id": pallet_id, "cookie": cookie_name, "productionDate": pallet_time.split()[0], "blocked": blocked} for pallet_id, cookie_name, pallet_time, blocked in c]
+        if found:
+            response.status = 200
+        else:
+            response.status = 404
+        return {"data": found}
+    except:
+        response.status = 404
+        return {"data": []}
 
 
 run(host='localhost', port=8888)
