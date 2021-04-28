@@ -40,7 +40,7 @@ are both primary keys and foreign keys):
 + Order_details(cookie_name, nbr_pallets, order_id)
 + Orders(**order_id**, customer_name, order_status)
 + Customers(**customer_name**, address)
-+ Deliveries(delivety_id, order_id, delivery_time)
++ Deliveries(delivery_id, order_id, delivery_time)
 
 
 ## Scripts to set up database
@@ -54,4 +54,3 @@ So, to create the database, we run:
 ```shell
 sqlite3 database.sqlite < database.sql
 ```
-
