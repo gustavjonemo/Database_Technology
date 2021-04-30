@@ -34,13 +34,13 @@ foreign keys, and bold italicized face for attributes which
 are both primary keys and foreign keys):
 
 + Material_storage(**ingredient**, current_amount, delivery_time, last_deposit, unit)
-+ Cookie_ingredients(cookie_name, ingredient, amount)
++ Cookie_ingredients(_cookie_name_, ingredient, amount)
 + Cookies(**cookie_name**)
-+ Pallets(**pallet_id**, cookie_name, pallet_time, delivery_status, blocked, order_id)
-+ Order_details(cookie_name, nbr_pallets, order_id)
-+ Orders(**order_id**, customer_name, order_status)
++ Pallets(**pallet_id**, _cookie_name_, pallet_time, delivery_status, blocked, _order_id_)
++ Order_details(_cookie_name_, nbr_pallets, _order_id_)
++ Orders(**order_id**, _customer_name_, order_status)
 + Customers(**customer_name**, address)
-+ Deliveries(delivery_id, order_id, delivery_time)
++ Deliveries(delivery_id, _order_id_, delivery_time)
 
 
 ## Scripts to set up database
