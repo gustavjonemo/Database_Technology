@@ -169,9 +169,17 @@ def get_cookies():
             GROUP BY cookie_name
             """
         )
-        response.status = 200
-        db.commit()
+
         found = [{"name": cookie_name, "pallets": unblocked_pallets} for cookie_name, unblocked_pallets in c]
+        if not found:
+            c.execute(
+                """
+                SELECT cookie_name
+                FROM Cookies
+                """
+            )
+            found = [{"name": cookie_name[0]} for cookie_name in c]
+        response.status = 200
         return {"data": found}
     except:
         response.status = 400
