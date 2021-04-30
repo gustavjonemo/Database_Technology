@@ -172,7 +172,6 @@ def get_cookies():
         response.status = 200
         db.commit()
         found = [{"name": cookie_name, "pallets": unblocked_pallets} for cookie_name, unblocked_pallets in c]
-        print(found)
         return {"data": found}
     except:
         response.status = 400

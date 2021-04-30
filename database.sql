@@ -1,9 +1,12 @@
+PRAGMA foreign_keys = ON;
+
 DROP TABLE IF EXISTS Cookie_ingredients;
 
 CREATE TABLE Cookie_ingredients(
 	cookie_name TEXT,
     ingredient  TEXT,
-    amount      INT
+    amount      INT,
+    FOREIGN KEY(cookie_name) REFERENCES Cookies(cookie_name)
 );
 
 DROP TABLE IF EXISTS Material_storage;
@@ -30,7 +33,9 @@ CREATE TABLE Pallets(
     pallet_time DATETIME,
 	delivery_status INT,  -- 1 - Delivered, 0 - Not delivered
 	blocked INT,        -- 1 - Blocked, 0 - Not blocked
-	order_id CHAR(4)
+	order_id CHAR(4),
+	FOREIGN KEY(cookie_name) REFERENCES Cookies(cookie_name),
+	FOREIGN KEY(order_id) REFERENCES Orders(order_id)
 );
 	
 DROP TABLE IF EXISTS Order_details;
@@ -38,7 +43,9 @@ DROP TABLE IF EXISTS Order_details;
 CREATE TABLE Order_details(
     cookie_name TEXT,
     nbr_pallets INT,
-    order_id CHAR(4)
+    order_id CHAR(4),
+    FOREIGN KEY(cookie_name) REFERENCES Cookies(cookie_name),
+    FOREIGN KEY(order_id) REFERENCES Orders(order_id)
 );
 
 DROP TABLE IF EXISTS Customers;
@@ -53,7 +60,8 @@ DROP TABLE IF EXISTS Deliveries;
 CREATE TABLE Deliveries(
 	delivery_id		CHAR(4),
 	order_id		CHAR(4),
-	delivery_time	DATETIME
+	delivery_time	DATETIME,
+	FOREIGN KEY(order_id) REFERENCES Orders(order_id)
 );
 
 DROP TABLE IF EXISTS Orders;
@@ -61,7 +69,8 @@ DROP TABLE IF EXISTS Orders;
 CREATE TABLE Orders(
 	order_id		CHAR(4) PRIMARY KEY,
 	customer_name	TEXT,
-	order_status	INT -- 1 - Delivered, 0 - Not delivered
+	order_status	INT, -- 1 - Delivered, 0 - Not delivered,
+	FOREIGN KEY(customer_name) REFERENCES Customers(customer_name)
 );
 
 DROP TRIGGER IF EXISTS available_ingredients;
