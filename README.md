@@ -9,7 +9,7 @@ This is the report for
 We solved this project on our own, except for:
 
  + The Peer-review meeting
- + 
+ + A meeting with Christian
 
 
 ## ER-design
@@ -33,44 +33,41 @@ so we use bold face for primary keys, italicized face for
 foreign keys, and bold italicized face for attributes which
 are both primary keys and foreign keys):
 
-+ Material_storage(**ingredient**, current_amount, date, time, last_deposit)
++ Material_storage(**ingredient**, current_amount, delivery_time, last_deposit, unit)
 + Cookie_ingredients(cookie_name, ingredient, amount)
-+ Cookie(**cookie_name**)
-+ Pallets(**pallet_id**, cookie_name, date, time, delivery_status, blocked, order_id)
++ Cookies(**cookie_name**)
++ Pallets(**pallet_id**, cookie_name, pallet_time, delivery_status, blocked, order_id)
 + Order_details(cookie_name, nbr_pallets, order_id)
 + Orders(**order_id**, customer_name, order_status)
 + Customers(**customer_name**, address)
-+ Deliveries(delivety_id, order_id, date, time)
++ Deliveries(delivery_id, order_id, delivery_time)
 
 
 ## Scripts to set up database
 
-The scripts used to set up and populate the database are in:
+The scripts used to set up the database are:
 
- + [`create-schema.sql`](create-schema.sql) (defines the tables), and
- + [`initial-data.sql`](initial-data.sql) (inserts data).
+ + [`database.sql`](database.sql) (defines the tables)
 
-So, to create and initialize the database, we run:
+So, to create the database, we run:
 
 ```shell
-sqlite3 krusty-db.sqlite < create-schema.sql
-sqlite3 krusty-db.sqlite < initial-data.sql
+sqlite3 database.sqlite < database.sql
 ```
 
-(or whatever you call your database file).
+## Scripts to run the database and tests
 
-## How to compile and run the program
-
-This section should give a few simple commands to type to
-compile and run the program from the command line, such as:
-
+The scripts used to run the database and test are:
 ```shell
-./gradlew run
+python Krusty.py  # starts database
+
+python Test.py  # starts the tests
 ```
 
-or, if you put your commands into a `Makefile`:
+The tests don't pass since we implemented blocking of pallets and get_cookies has number of pallets in its body.
 
+For testing with curl you use localhost and port 8888,
+example for unblocking pallets of "Tango" cookies that were made after the 27/4-2021 :  
 ```shell
-make compile
-make run
+curl -X POST http://localhost:8888/cookies/Tango/unblock\?after=2021-04-27 
 ```
